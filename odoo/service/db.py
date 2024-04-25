@@ -103,7 +103,8 @@ def _create_empty_database(name):
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (name,), log_exceptions=False)
         if cr.fetchall():
-            raise DatabaseExists("database %r already exists!" % (name,))
+            #MM raise DatabaseExists("database %r already exists!" % (name,))
+            _logger.info('database `%s` already exists! but thanks to MM i continue with import!.', name )
         else:
             # database-altering operations cannot be executed inside a transaction
             cr.rollback()
@@ -298,7 +299,7 @@ def restore_db(db, dump_file, copy=False, neutralize_database=False):
     assert isinstance(db, str)
     if exp_db_exist(db):
         _logger.warning('RESTORE DB: %s already exists', db)
-        raise Exception("Database already exists")
+        ##MM raise Exception("Database already exists")
 
     _logger.info('RESTORING DB: %s', db)
     _create_empty_database(db)
