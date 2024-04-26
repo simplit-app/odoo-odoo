@@ -3,6 +3,8 @@ setlocal enabledelayedexpansion
 
 set "directory=.\addons_simplit"
 
+rem echo El directorio usado para convertir los directorios es: %directory%
+
 for %%f in ("%directory%\*") do (
     set "filename=%%f"
     set "content="
