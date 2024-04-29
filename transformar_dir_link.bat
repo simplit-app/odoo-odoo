@@ -13,11 +13,13 @@ for %%f in ("%directory%\*") do (
         set "content=!content!%%a"
     )
 
-    rem Eliminar cualquier enlace simbólico previo con el mismo nombre
-    del "%directory%\%%~nf"
+    set "content=!content:/=\!"
+	
+	rem Eliminar cualquier enlace simbólico previo con el mismo nombre
+    unlink "%directory%\%%~nf"
 
     rem Crear un enlace simbólico con el nombre del archivo y el contenido como destino
-    mklink "%directory%\%%~nf" "!content!"
+	mklink /D "%directory%\%%~nf" "!content!"
 	
 )
 
