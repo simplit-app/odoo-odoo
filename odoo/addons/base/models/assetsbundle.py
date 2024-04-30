@@ -1077,6 +1077,9 @@ class ScssStylesheetAsset(PreprocessedCSS):
                 precision=self.precision,
             )
         except libsass.CompileError as e:
+            print('--source--')
+            print(source)
+            print('**source**')
             raise CompileError(e.args[0])
 
     def get_command(self):
