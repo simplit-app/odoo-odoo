@@ -1406,6 +1406,8 @@ class Boolean(Field):
     """ Encapsulates a :class:`bool`. """
     type = 'boolean'
     column_type = ('bool', 'bool')
+    FALSE = 'FALSE'
+    TRUE = 'TRUE'
 
     def convert_to_column(self, value, record, values=None, validate=True):
         return bool(value)
@@ -1416,6 +1418,48 @@ class Boolean(Field):
     def convert_to_export(self, value, record):
         return value
 
+class BooleanStr(Boolean):
+    def __init__(self, string=None, **kwargs):
+        super(BooleanStr, self).__init__(string=string, **kwargs)
+        self.column_type = ('VARCHAR', 'VARCHAR(1)')  # Almacenar como VARCHAR de longitud 1
+        self.FALSE = 'N'
+        self.TRUE = 'S'
+
+    def convert_to_cache(self, value, record, validate=True):
+        if isinstance(value, str):
+            return value == 'S'
+        return super(BooleanStr, self).convert_to_cache(value, record, validate=validate)
+
+    def convert_to_record(self, value, record):
+        if value == 1:
+            value = True
+        if value == 0:
+            value = False
+
+        if isinstance(value, str):
+            return value
+            
+        if isinstance(value, bool):
+            return 'S' if value else 'N'
+        return super(BooleanStr, self).convert_to_record(value, record)
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if value == 1:
+            value = True
+        if value == 0:
+            value = False
+        
+        if isinstance(value, str):
+            return value
+        
+        if isinstance(value, bool):
+            return 'S' if value else 'N'
+        return super(BooleanStr, self).convert_to_column(value, record, values=values, validate=validate)
+
+    def convert_to_read(self, value, record, use_display_name=True):
+        if isinstance(value, str):
+            return value == 'S'
+        return super(BooleanStr, self).convert_to_read(value, record, use_display_name)
 
 class Integer(Field):
     """ Encapsulates an :class:`int`. """

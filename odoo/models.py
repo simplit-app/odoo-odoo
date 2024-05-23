@@ -2007,7 +2007,7 @@ class BaseModel(metaclass=MetaModel):
                 sql_expr = SQL("%s::date", sql_expr)
 
         elif field.type == 'boolean':
-            sql_expr = SQL("COALESCE(%s, FALSE)", sql_expr)
+            sql_expr = SQL("COALESCE(%s, %s)", sql_expr, field.FALSE)
 
         return sql_expr, [fname]
 
@@ -5102,7 +5102,10 @@ class BaseModel(metaclass=MetaModel):
             # the item[0] trick below works for domain items and '&'/'|'/'!'
             # operators too
             if not any(item[0] == self._active_name for item in domain):
-                domain = [(self._active_name, '=', 1)] + domain
+                if self._active_name == 'marca_baja':
+                    domain = [(self._active_name, '=', 'N')] + domain
+                else:
+                    domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
             return expression.expression(domain, self).query
@@ -5250,7 +5253,7 @@ class BaseModel(metaclass=MetaModel):
 
         sql_field = self._field_to_sql(alias, field_name, query)
         if field.type == 'boolean':
-            sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
+            sql_field = SQL("COALESCE(%s, %s)", sql_field, field.FALSE)
         elif field.type == 'properties' and property_name:
             sql_field = SQL("(%s -> %s)", sql_field, property_name)
 
@@ -5750,9 +5753,20 @@ class BaseModel(metaclass=MetaModel):
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
+        cls = self.env.registry[self._name]
+        #Con el campo marca baja tenemos lo logica invertida al campo active
+        # Es decir, cuando active == True <-> marca_baja = 'N'
+        
+        if self._active_name == 'marca_baja':
+            true_value = cls._fields[self._active_name].convert_to_column(False, None)
+            false_value = cls._fields[self._active_name].convert_to_column(True, None)
+        else:
+            true_value = cls._fields[self._active_name].convert_to_column(True, None)
+            false_value = cls._fields[self._active_name].convert_to_column(False, None)
+                
         active_recs = self.filtered(self._active_name)
-        active_recs[self._active_name] = False
-        (self - active_recs)[self._active_name] = True
+        active_recs[self._active_name] = false_value
+        (self - active_recs)[self._active_name] = true_value
 
     def action_archive(self):
         """Sets :attr:`active` to ``False`` on a recordset, by calling

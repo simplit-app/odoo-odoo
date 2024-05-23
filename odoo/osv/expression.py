@@ -1549,13 +1549,18 @@ class expression(object):
 
             else:  # Must not happen
                 raise ValueError(f"Invalid domain term {leaf!r}")
-
-        if field.type == 'boolean' and operator in ('=', '!=') and isinstance(right, bool):
-            value = (not right) if operator in NEGATIVE_TERM_OPERATORS else right
-            if value:
-                return SQL("(%s = TRUE)", sql_field)
+        
+        #MM ACA (not right) como negar el N o S
+        if field.type == 'boolean' and operator in ('=', '!=') and ( isinstance(right, bool) or right =='S' or right=='N'):
+            if isinstance(right, bool):
+               value = (not right) if operator in NEGATIVE_TERM_OPERATORS else right
             else:
-                return SQL("(%s IS NULL OR %s = FALSE)", sql_field, sql_field)
+               value = (False if right =='S' else True) if operator in NEGATIVE_TERM_OPERATORS else (True if right =='S' else False)
+
+            if value:
+                return SQL("(%s = %s)", sql_field, field.TRUE)
+            else:
+                return SQL("(%s IS NULL OR %s = %s)", sql_field, sql_field, field.FALSE)
 
         if operator == '=' and (right is False or right is None):
             return SQL("%s IS NULL", sql_field)

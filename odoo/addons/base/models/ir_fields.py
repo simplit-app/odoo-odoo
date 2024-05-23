@@ -23,7 +23,9 @@ BOOLEAN_TRANSLATIONS = (
     _lt('yes'),
     _lt('no'),
     _lt('true'),
-    _lt('false')
+    _lt('false'),
+    _lt('S'),
+    _lt('N')
 )
 
 class ImportWarning(Warning):
@@ -211,7 +213,7 @@ class IrFieldsConverter(models.AbstractModel):
         trues = set(word.lower() for word in itertools.chain(
             [u'1', u"true", u"yes"], # don't use potentially translated values
             self._get_boolean_translations(u"true"),
-            self._get_boolean_translations(u"yes"),
+            self._get_boolean_translations(u"yes")
         ))
         if value.lower() in trues:
             return True, []
@@ -220,7 +222,7 @@ class IrFieldsConverter(models.AbstractModel):
         falses = set(word.lower() for word in itertools.chain(
             [u'', u"0", u"false", u"no"],
             self._get_boolean_translations(u"false"),
-            self._get_boolean_translations(u"no"),
+            self._get_boolean_translations(u"no")
         ))
         if value.lower() in falses:
             return False, []

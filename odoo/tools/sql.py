@@ -226,6 +226,16 @@ SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
 })
 
 
+def create_view(cr, viewname, query):
+    """ Create the view for a model. """
+
+    stament = """CREATE or REPLACE VIEW %s as (%s
+    )""" % (viewname, query)
+    
+    cr.execute(stament)
+
+    _schema.debug("View %r: created", viewname)
+
 def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
     colspecs = [

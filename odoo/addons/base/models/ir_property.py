@@ -443,7 +443,12 @@ class Property(models.Model):
 
         elif field.type == 'boolean':
             # the value must be mapped to an integer value
-            value = int(value)
+            if value == 'S':
+               value = 1
+            elif value == 'N':
+                value = 0
+            else:
+               value = int(value)
 
         # retrieve the properties that match the condition
         domain = self._get_domain(name, model)
