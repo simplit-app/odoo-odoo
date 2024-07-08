@@ -116,7 +116,9 @@ export const systrayItem = {
     Component: SwitchCompanyMenu,
     isDisplayed(env) {
         const { allowedCompanies } = env.services.company;
-        return Object.keys(allowedCompanies).length > 1;
+        return true;
+     //MM Muestro el combo de las compañias siempre, no importa si hay una sola
+     //MM   return Object.keys(allowedCompanies).length > 1;
     },
 };
 
