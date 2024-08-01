@@ -2695,7 +2695,7 @@ class Model(models.AbstractModel):
             'type': 'ir.actions.act_window',
             'res_model': self._name,
             'views': [(view_id, 'form')],
-            'target': 'current',
+            'target': 'new', #MM-> estaba como 'current' 31/07/2024
             'res_id': self.id,
             'context': dict(self._context),
         }
