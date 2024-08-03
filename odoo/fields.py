@@ -583,6 +583,7 @@ class Field(MetaField('DummyField', (object,), {})):
             depends_context.extend(getattr(func, '_depends_context', ()))
 
         # display_name may depend on context['lang'] (`test_lp1071710`)
+        #print(model._name)
         if self.automatic and self.name == 'display_name' and model._rec_name:
             if model._fields[model._rec_name].base_field.translate:
                 if 'lang' not in depends_context:
@@ -1437,10 +1438,11 @@ class BooleanStr(Boolean):
             value = False
 
         if isinstance(value, str):
-            return value
+            return value  == 'S'
             
         if isinstance(value, bool):
-            return 'S' if value else 'N'
+            return value
+        
         return super(BooleanStr, self).convert_to_record(value, record)
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -3140,6 +3142,7 @@ class Many2one(_Relational):
         return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
     def convert_to_read(self, value, record, use_display_name=True):
+        
         if use_display_name and value:
             # evaluate display_name as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
@@ -3151,6 +3154,8 @@ class Many2one(_Relational):
                 # Should not happen, unless the foreign key is missing.
                 return False
         else:
+            #print(value._name)
+            #print(self.name) 
             return value.id
 
     def convert_to_write(self, value, record):
