@@ -43,11 +43,10 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/emoji_picker/emoji_data.js'
         ],
         'web.assets_backend': [
-            'web/static/src/scss/pre_variables.scss',
-            
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             ('include', 'web._assets_bootstrap_backend'),
 
@@ -140,11 +139,11 @@ This module provides the core of the Odoo Web Client.
             # but it was not done: all common files were simply put in this
             # bundle. We'll have to optimize that.
 
-            'web/static/src/scss/pre_variables.scss',
-
+            
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_frontend_helpers'),
-
+            
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/luxon/luxon.js',
 

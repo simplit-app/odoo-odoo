@@ -1077,9 +1077,13 @@ class ScssStylesheetAsset(PreprocessedCSS):
                 precision=self.precision,
             )
         except libsass.CompileError as e:
-            print('--source--')
-            print(source)
-            print('**source**')
+
+            with open('/home/odoo/error_source.txt', 'w') as file:
+                file.write("Error: {}\n\n".format(e.args[0]))
+                file.write("Contenido de 'source':\n")
+                file.write(source)
+        
+            print('Revisar el archivo: /home/odoo/error_source.txt')
             raise CompileError(e.args[0])
 
     def get_command(self):
