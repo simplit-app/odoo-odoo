@@ -4095,7 +4095,7 @@ msgstr "Gestionar por correo electrónico"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr "Gestionar en Odoo"
+msgstr "Gestionar Notificaciones Internas"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_error
